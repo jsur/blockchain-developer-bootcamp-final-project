@@ -23,8 +23,8 @@ User receives a keycode / access token to the apartment after first payment. If 
 
 1. Run scheduled contract weekly (Gelato? https://docs.gelato.network/tutorial)
 2. Check for made payments for each rental agreement (from renter wallet to owner wallet)
-3. If last payment is late <= 7 days, send reminder
-4. If last payment is late <= 30 days, transfer ownership back to owner . Revoke user token access rights to apartment smart lock. 
+3. If last payment is late 7 days, send reminder
+4. If last payment is late >= 30 days, transfer ownership back to owner. Revoke user token access rights to apartment smart lock. 
 
 
 
