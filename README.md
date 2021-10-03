@@ -16,7 +16,7 @@ User receives a keycode / access token to the apartment after first payment. If 
 3. Browse apartments
 4. Select apartment
 5. Agree on contract, pay first installment with Metamask (smart contract call)
-6. Ownership is transferred to user account from owner account (smart contract call)
+6. Tenantship is transferred to user account (smart contract call)
 7. Receive key phrase / token / OTP / etc. to access apartment with smart lock app (this part will be mocked in project)
 
 ## Scheduled workflow for late payments
@@ -24,7 +24,7 @@ User receives a keycode / access token to the apartment after first payment. If 
 1. Run scheduled contract weekly (Gelato? https://docs.gelato.network/tutorial)
 2. Check for made payments for each rental agreement (from renter wallet to owner wallet)
 3. If last payment is late 7 days, send reminder
-4. If last payment is late >= 30 days, transfer ownership back to owner. Revoke user token access rights to apartment smart lock. 
+4. If last payment is late >= 30 days, remove tenant. Revoke user token access rights to apartment smart lock. 
 
 
 
