@@ -65,4 +65,9 @@ contract Rentals {
     // TODO: remove tenant from a Property and set status to NotAvailable
   }
 
+  function withdraw() public {
+    require(msg.sender == owner, "Only the contract owner can withdraw");
+    // TODO: withdraw any funds from contract
+  }
+
 }
