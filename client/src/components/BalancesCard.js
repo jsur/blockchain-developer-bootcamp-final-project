@@ -16,11 +16,11 @@ const BalanceCard = () => {
   }, [account]);
 
   if (!active) {
-    return <Text>Connect wallet to continue.</Text>;
+    return <Text>{''}</Text>;
   }
 
   return (
-    <Card style={{ maxWidth: 300 }}>
+    <Card className="d-flex flex-row align-items-center" style={{ maxWidth: 250, height: 80 }}>
       <Text block color={colors.green}>
         ETH balance: {ethBalance}
       </Text>

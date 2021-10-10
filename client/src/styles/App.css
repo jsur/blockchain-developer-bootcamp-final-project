@@ -2,5 +2,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Courier New';
-  background-color: white;
+  background-color: black;
+  color: white;
 }

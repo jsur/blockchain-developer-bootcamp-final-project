@@ -19,6 +19,9 @@ const App = () => {
         <div>
           <Header />
           <Route exact path="/" component={Home} />
+          {/* TODO
+            <Route exact path="/myproperties" component={MyProperties} />
+            */}
         </div>
       </Web3ReactProvider>
     </AppContextProvider>

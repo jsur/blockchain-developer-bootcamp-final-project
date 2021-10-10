@@ -2,20 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
-import MMLogo from '../static/metamask-logo.svg';
 import Text from './Text';
 import Card from './Card';
 import { injected } from '../connectors';
 import { shortenAddress } from '../utils/shortenAddress';
 import { useAppContext } from '../AppContext';
 
-const MetamaskLogo = styled.img.attrs({
-  src: MMLogo,
-})`
-  height: 40px;
-`;
-
-const ConnectBtn = styled(Button).attrs({ variant: 'outline-dark' })``;
+const ConnectBtn = styled(Button).attrs({ variant: 'outline-light' })``;
 
 const MetamaskConnectButton = () => {
   const { setContentError } = useAppContext();
@@ -23,9 +16,8 @@ const MetamaskConnectButton = () => {
 
   if (active) {
     return (
-      <Card className="d-flex flex-row justify-content-between" style={{ width: 350 }}>
-        <MetamaskLogo />
-        <Text uppercase color="green" t3 lineHeight="40px" className="mx-4">
+      <Card className="d-flex flex-row justify-content-between align-items-center" style={{ maxWidth: 300 }}>
+        <Text uppercase color="white">
           {shortenAddress(account)}
         </Text>
         <ConnectBtn onClick={deactivate}>Log Out</ConnectBtn>
@@ -34,23 +26,17 @@ const MetamaskConnectButton = () => {
   }
 
   return (
-    <Card className="d-flex flex-row justify-content-between" style={{ width: 350 }}>
-      <MetamaskLogo />
-      <Text uppercase color="green" t3 lineHeight="40px" className="mx-2">
-        Metamask
-      </Text>
-      <ConnectBtn
-        onClick={() => {
-          activate(injected, (e) => {
-            if (e instanceof UnsupportedChainIdError) {
-              setContentError('Only Ropsten supported currently!');
-            }
-          });
-        }}
-      >
-        Connect
-      </ConnectBtn>
-    </Card>
+    <ConnectBtn
+      onClick={() => {
+        activate(injected, (e) => {
+          if (e instanceof UnsupportedChainIdError) {
+            setContentError('Only Ropsten supported currently!');
+          }
+        });
+      }}
+    >
+      Connect
+    </ConnectBtn>
   );
 };
 
