@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
@@ -15,7 +16,13 @@ const pageState = {
   READY: 'READY',
 };
 
+const onLogOut = (deactivate, cb) => {
+  deactivate();
+  cb();
+};
+
 const MetamaskConnectButton = () => {
+  const history = useHistory();
   const { setContentError } = useAppContext();
   const { activate, active, account, deactivate } = useWeb3React();
   const [status, setStatus] = useState(pageState.LOADING);
@@ -55,7 +62,7 @@ const MetamaskConnectButton = () => {
       <Text uppercase color="white">
         {shortenAddress(account)}
       </Text>
-      <ConnectBtn onClick={deactivate}>Log Out</ConnectBtn>
+      <ConnectBtn onClick={() => onLogOut(deactivate, () => history.push('/'))}>Log Out</ConnectBtn>
     </Card>
   );
 };

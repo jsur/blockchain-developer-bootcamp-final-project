@@ -9,6 +9,7 @@
   "dependencies": {
     "@ethersproject/constants": "^5.4.0",
     "@ethersproject/contracts": "^5.4.1",
+    "@ethersproject/units": "^5.4.0",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "bootstrap": "^4.6.0",

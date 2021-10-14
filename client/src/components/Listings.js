@@ -3,9 +3,13 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber } from 'ethers';
+import { formatEther } from '@ethersproject/units';
 import Text from './Text';
 import { useContract } from '../hooks/useContract';
 import { colors } from '../theme';
+
+import { CONTRACT_ADDRESS_RENTALS } from '../constants';
+import RentalsABI from '../../../build/contracts/Rentals.json';
 
 const StyledDiv = styled.div`
   display: flex;
@@ -45,15 +49,15 @@ const NotActive = () => {
 };
 
 const ListingItem = ({ item }) => {
-  const { propertyId, description, location, currentRentAmount: amount, infoUrl } = item;
+  const { propertyId, description, location, currentRentAmount: amount, imgUrl } = item;
   return (
     <StyledItem>
       {/* TODO: use imgUrl and not infoUrl */}
-      <img src={infoUrl} alt="listing" style={{ height: '150px', width: '150px', borderRadius: '5px' }} />
+      <img src={imgUrl} alt="listing" style={{ height: '150px', width: '150px', borderRadius: '5px' }} />
       <StyledItemTextContainer>
         <Text>{description}</Text>
         <Text>{location}</Text>
-        <Text>{BigNumber.from(amount).toNumber()} ETH / month</Text>
+        <Text>{formatEther(amount)} ETH / month</Text>
         <Link to={{ pathname: '/details', search: `?id=${BigNumber.from(propertyId).toNumber()}` }}>More info</Link>
       </StyledItemTextContainer>
     </StyledItem>

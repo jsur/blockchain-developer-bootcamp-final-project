@@ -52,11 +52,12 @@ contract Rentals {
 
   constructor() {}
 
+  // isExactPayment(_propertyId)
+
   function addAsTenant(uint _propertyId)
     public
     payable
-    isVacant(_propertyId)
-    isExactPayment(_propertyId) {    
+    isVacant(_propertyId) {
 
       Property storage _p = properties[_propertyId];
       _p.tenant = payable(msg.sender);
@@ -78,7 +79,7 @@ contract Rentals {
       tenant: payable(address(0)),
       location: _location,
       description: _description,
-      infoUrl: _url,
+      infoUrl: _infoUrl,
       imgUrl: _imgUrl
       // TODO: figure out a way to initialize this as an empty array
       // tenantPayments: [Payment({ timestamp: 0, amount: 0, from: address(0) })]
