@@ -3,10 +3,12 @@ import { Web3ReactProvider } from '@web3-react/core';
 import { ethers } from 'ethers';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route } from 'react-router-dom';
-import './styles/App.css';
 import Home from './pages/Home';
+import Details from './pages/Details';
 import Header from './components/Header';
 import { AppContextProvider } from './AppContext';
+
+import './styles/App.css';
 
 function getLibrary(provider) {
   return new ethers.providers.Web3Provider(provider);
@@ -19,9 +21,7 @@ const App = () => {
         <div>
           <Header />
           <Route exact path="/" component={Home} />
-          {/* TODO
-            <Route exact path="/myproperties" component={MyProperties} />
-            */}
+          <Route exact path="/details" component={Details} />
         </div>
       </Web3ReactProvider>
     </AppContextProvider>

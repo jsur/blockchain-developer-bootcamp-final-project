@@ -1,22 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber } from 'ethers';
 import Text from './Text';
 import { useContract } from '../hooks/useContract';
 import { colors } from '../theme';
-import { CONTRACT_ADDRESS_RENTALS } from '../constants';
-import RentalsABI from '../../../build/contracts/Rentals.json';
 
 const StyledDiv = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 2em;
 `;
 
 const StyledItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 10px;
+  border-radius: 5px;
 `;
 
 const StyledItemTextContainer = styled.div`
@@ -42,17 +44,17 @@ const NotActive = () => {
   );
 };
 
-const ListingItem = ({ description, location, amount, imgUrl }) => {
+const ListingItem = ({ item }) => {
+  const { propertyId, description, location, currentRentAmount: amount, infoUrl } = item;
   return (
     <StyledItem>
-      <img src={imgUrl} alt="listing" style={{ height: '150px', width: '150px', borderRadius: '5px' }} />
+      {/* TODO: use imgUrl and not infoUrl */}
+      <img src={infoUrl} alt="listing" style={{ height: '150px', width: '150px', borderRadius: '5px' }} />
       <StyledItemTextContainer>
         <Text>{description}</Text>
         <Text>{location}</Text>
-        <Text>{amount} ETH / month</Text>
-        <a href="http://google.com" target="_blank" rel="noreferrer">
-          More info
-        </a>
+        <Text>{BigNumber.from(amount).toNumber()} ETH / month</Text>
+        <Link to={{ pathname: '/details', search: `?id=${BigNumber.from(propertyId).toNumber()}` }}>More info</Link>
       </StyledItemTextContainer>
     </StyledItem>
   );
@@ -65,9 +67,9 @@ const Listings = () => {
 
   const getProperties = useCallback(async (contract) => {
     try {
-      const listing = await contract.properties(1);
-      console.log('listing:', listing);
-      setListings([listing]);
+      // TODO: figure out a better data structure for this
+      const arr = await Promise.all([contract.properties(1), contract.properties(2)]);
+      setListings(arr);
     } catch (e) {
       console.log('error:', e);
     }
@@ -85,15 +87,10 @@ const Listings = () => {
 
   return (
     <StyledDiv>
-      {listings.map((l) => (
-        <ListingItem
-          key={BigNumber.from(l.propertyId).toNumber()}
-          description={l.description}
-          location={l.location}
-          amount={BigNumber.from(l.currentRentAmount).toNumber()}
-          imgUrl={l.infoUrl}
-        />
-      ))}
+      {listings.map((l) => {
+        const id = BigNumber.from(l.propertyId).toNumber();
+        return <ListingItem key={id} item={l} />;
+      })}
     </StyledDiv>
   );
 };
