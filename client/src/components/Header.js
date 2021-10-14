@@ -20,7 +20,7 @@ const GlobalError = () => {
     if (contentError) {
       setTimeout(() => {
         setContentError('');
-      }, 2000);
+      }, 5000);
     }
   }, [contentError]);
 
@@ -29,7 +29,7 @@ const GlobalError = () => {
   }
   return (
     <StyledContainer fluid>
-      <Text>Only Ropsten network supported!</Text>
+      <Text>Please change your network to Ropsten to continue.</Text>
     </StyledContainer>
   );
 };

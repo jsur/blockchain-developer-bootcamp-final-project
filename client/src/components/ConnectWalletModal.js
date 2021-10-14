@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { useWeb3React } from '@web3-react/core';
 import MMLogo from '../static/metamask-logo.svg';
 import Text from './Text';
 import { injected } from '../connectors';
-import Modal from 'react-bootstrap/Modal';
 import useWalletConnectionModal from '../hooks/useWalletConnectionModal';
 
 const MetamaskLogo = styled.img.attrs({

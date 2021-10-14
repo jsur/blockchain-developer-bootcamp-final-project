@@ -1,20 +1,9 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { useWeb3React } from '@web3-react/core';
 import ConnectWalletModal from '../../components/ConnectWalletModal';
 import Text from '../../components/Text';
+import Listings from '../../components/Listings';
 import useWalletConnectionModal from '../../hooks/useWalletConnectionModal';
-import { colors } from '../../theme';
-
-const Listings = () => {
-  const { active } = useWeb3React();
-
-  if (!active) {
-    return <Text>Connect {<Text color={colors.green}>Ropsten</Text>} wallet to continue.</Text>;
-  }
-
-  return <Text>here be listings</Text>;
-};
 
 const Home = () => {
   const { isWalletConnectModalOpen } = useWalletConnectionModal();
