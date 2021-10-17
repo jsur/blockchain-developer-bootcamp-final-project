@@ -8,7 +8,6 @@ contract Rentals {
   address payable public owner = payable(msg.sender);
   uint256 public previousPaymentCheck;
   uint private propertyIdCounter = 0;
-  uint public test_id;
 
   enum State{ Vacant, Rented, NotAvailable }
 
@@ -31,10 +30,11 @@ contract Rentals {
     address from;
   }
 
-  // TODO: refactor to "listings"
+  uint[] public idList;
+  uint public idListLength;
+
   mapping (uint => Property) public properties;
 
-  // is property vacant
   modifier isVacant(uint id) {
     require(properties[id].status == State.Vacant && properties[id].tenant == address(0), "This property is not vacant.");
     _;
@@ -52,13 +52,11 @@ contract Rentals {
 
   constructor() {}
 
-  // isExactPayment(_propertyId)
-
   function addAsTenant(uint _propertyId)
     public
     payable
-    isVacant(_propertyId) {
-
+    isVacant(_propertyId)
+    isExactPayment(_propertyId) {
       Property storage _p = properties[_propertyId];
       _p.tenant = payable(msg.sender);
       // TODO: add this again
@@ -67,8 +65,7 @@ contract Rentals {
       (bool success, ) = owner.call{ value: msg.value }("");
       require(success, "Adding tenant to property failed.");
       emit LogTenantAdded(_propertyId, msg.sender);
-
-  }
+    }
 
   function addProperty(uint rentAmount, string memory _location, string memory _description, string memory _infoUrl, string memory _imgUrl) public isOwner {
     uint newPropertyId = propertyIdCounter + 1;
@@ -85,6 +82,8 @@ contract Rentals {
       // tenantPayments: [Payment({ timestamp: 0, amount: 0, from: address(0) })]
     });
     propertyIdCounter = newPropertyId;
+    idList.push(newPropertyId);
+    idListLength = idList.length;
     properties[newProperty.propertyId] = newProperty;
   }
 

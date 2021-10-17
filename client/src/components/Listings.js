@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Spinner } from 'react-bootstrap';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber } from 'ethers';
 import { formatEther } from '@ethersproject/units';
@@ -10,6 +11,12 @@ import { colors } from '../theme';
 
 import { CONTRACT_ADDRESS_RENTALS } from '../constants';
 import RentalsABI from '../../../build/contracts/Rentals.json';
+
+const listingState = {
+  LOADING: 'LOADING',
+  READY: 'READY',
+  ERROR: 'ERROR',
+};
 
 const StyledDiv = styled.div`
   display: flex;
@@ -84,16 +91,22 @@ const ListingItem = ({ item }) => {
 
 const Listings = () => {
   const [listings, setListings] = useState([]);
+  const [status, setStatus] = useState(listingState.LOADING);
   const { active } = useWeb3React();
   const contract = useContract(CONTRACT_ADDRESS_RENTALS, RentalsABI.abi);
 
   const getProperties = useCallback(async (contract) => {
     try {
-      // TODO: figure out a better data structure for this
-      const arr = await Promise.all([contract.properties(1), contract.properties(2)]);
+      // sorry, still on the lookout for optimal solidity data structures
+      const idListLengthBN = await contract.idListLength();
+      const idBNs = await Promise.all(Array.from(Array(idListLengthBN.toNumber())).map((_, i) => contract.idList(i)));
+      const ids = idBNs.map((n) => n.toNumber());
+      const arr = await Promise.all(ids.map((id) => contract.properties(id)));
       setListings(arr);
+      setStatus(listingState.READY);
     } catch (e) {
       console.log('error:', e);
+      setStatus(listingState.ERROR);
     }
   }, []);
 
@@ -102,6 +115,10 @@ const Listings = () => {
       getProperties(contract);
     }
   }, [active]);
+
+  if (status === listingState.LOADING) {
+    return <Spinner animation="border" size="sm" style={{ color: colors.green, marginTop: '20px' }} />;
+  }
 
   if (!active) {
     return <NotActive />;
