@@ -14,7 +14,6 @@ import RentalsABI from '../../../build/contracts/Rentals.json';
 const StyledDiv = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 2em;
 `;
 
 const StyledItem = styled.div`
@@ -31,6 +30,23 @@ const StyledItemTextContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+const FilteredListing = ({ listings, status }) => {
+  const filtered = listings.filter((l) => l.status === status);
+
+  if (filtered.length < 1) {
+    return <Text>Nothing here 🤷</Text>;
+  }
+
+  return (
+    <StyledDiv>
+      {filtered.map((l) => {
+        const id = BigNumber.from(l.propertyId).toNumber();
+        return <ListingItem key={id} item={l} />;
+      })}
+    </StyledDiv>
+  );
+};
 
 const NotActive = () => {
   return (
@@ -58,7 +74,9 @@ const ListingItem = ({ item }) => {
         <Text>{description}</Text>
         <Text>{location}</Text>
         <Text>{formatEther(amount)} ETH / month</Text>
-        <Link to={{ pathname: '/details', search: `?id=${BigNumber.from(propertyId).toNumber()}` }}>More info</Link>
+        {item.status === 0 && (
+          <Link to={{ pathname: '/details', search: `?id=${BigNumber.from(propertyId).toNumber()}` }}>More info</Link>
+        )}
       </StyledItemTextContainer>
     </StyledItem>
   );
@@ -90,12 +108,16 @@ const Listings = () => {
   }
 
   return (
-    <StyledDiv>
-      {listings.map((l) => {
-        const id = BigNumber.from(l.propertyId).toNumber();
-        return <ListingItem key={id} item={l} />;
-      })}
-    </StyledDiv>
+    <>
+      <Text t3 color={colors.green}>
+        Available listings
+      </Text>
+      <FilteredListing listings={listings} status={0} />
+      <Text t3 color={colors.red} style={{ marginTop: '20px' }}>
+        Rented
+      </Text>
+      <FilteredListing listings={listings} status={1} />
+    </>
   );
 };
 
