@@ -28,6 +28,7 @@ const BuyButton = styled(Button).attrs({ variant: 'outline-success' })`
 
 const Details = ({ location }) => {
   const [status, setStatus] = useState(DetailsState.READY);
+  const [mmError, setMmError] = useState(null);
   const [txHash, setTxHash] = useState(null);
   const [listing, setListing] = useState(undefined);
   const { active, account } = useWeb3React();
@@ -58,12 +59,15 @@ const Details = ({ location }) => {
       setStatus(DetailsState.SOLD);
     } catch (e) {
       setStatus(DetailsState.ERROR);
+      if (e.code && typeof e.code === 'number') {
+        setMmError(e.message);
+      }
     }
   };
 
   if (!active) return <Redirect to="/" />;
 
-  const { LOADING, READY, SOLD } = DetailsState;
+  const { LOADING, READY, SOLD, ERROR } = DetailsState;
 
   return (
     <Container fluid className="mt-5 d-flex flex-column justify-content-center align-items-center">
@@ -87,6 +91,14 @@ const Details = ({ location }) => {
             <Link to={{ pathname: `https://ropsten.etherscan.io/tx/${txHash}` }} target="_blank">
               Etherscan
             </Link>
+          </Text>
+          <Link to="/">Back to front page</Link>
+        </>
+      )}
+      {status === ERROR && (
+        <>
+          <Text style={{ marginTop: '10px' }} color={colors.red}>
+            {mmError || 'Error encountered!'}
           </Text>
           <Link to="/">Back to front page</Link>
         </>

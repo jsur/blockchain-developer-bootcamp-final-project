@@ -7,6 +7,7 @@ import { BigNumber } from 'ethers';
 import { formatEther } from '@ethersproject/units';
 import Text from './Text';
 import { useContract } from '../hooks/useContract';
+import { shortenAddress } from '../utils/shortenAddress';
 import { colors } from '../theme';
 
 import { CONTRACT_ADDRESS_RENTALS } from '../constants';
@@ -84,6 +85,7 @@ const ListingItem = ({ item }) => {
         {item.status === 0 && (
           <Link to={{ pathname: '/details', search: `?id=${BigNumber.from(propertyId).toNumber()}` }}>More info</Link>
         )}
+        {item.status === 1 && item.tenant && <Text>Tenant: {shortenAddress(item.tenant)}</Text>}
       </StyledItemTextContainer>
     </StyledItem>
   );
@@ -97,7 +99,7 @@ const Listings = () => {
 
   const getProperties = useCallback(async (contract) => {
     try {
-      // sorry, still on the lookout for optimal solidity data structures
+      // still on the lookout for optimal solidity data structures, this ain't it
       const idListLengthBN = await contract.idListLength();
       const idBNs = await Promise.all(Array.from(Array(idListLengthBN.toNumber())).map((_, i) => contract.idList(i)));
       const ids = idBNs.map((n) => n.toNumber());
