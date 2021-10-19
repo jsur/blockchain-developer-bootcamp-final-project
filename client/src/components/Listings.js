@@ -11,7 +11,7 @@ import { shortenAddress } from '../utils/shortenAddress';
 import { colors } from '../theme';
 
 import { CONTRACT_ADDRESS_RENTALS } from '../constants';
-import RentalsABI from '../../../build/contracts/Rentals.json';
+import RentalsABI from '../../contract-build/contracts/Rentals.json';
 
 const listingState = {
   LOADING: 'LOADING',
