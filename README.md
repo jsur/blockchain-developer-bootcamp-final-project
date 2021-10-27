@@ -26,6 +26,13 @@ User receives a keycode / access token to the apartment after first payment. If 
 3. If last payment is late 7 days, send reminder
 4. If last payment is late >= 30 days, remove tenant. Revoke user token access rights to apartment smart lock.
 
+## Directory structure
+
+- `client`: Project's React frontend. Run with `cd client && yarn start`. Access deployed version in https://final-project-ten.vercel.app/
+- `contracts`: Smart contracts that are deployed in the Ropsten testnet.
+- `migrations`: Migration files for deploying contracts in `contracts` directory.
+- `test`: Tests for smart contracts.
+
 ## Environment variables
 
 ```
@@ -37,4 +44,8 @@ ROPSTEN_MNEMONIC=
 
 - Tenant payments tracking
 - Tenant removal
-- Contract address usage, build with ropsten address, developer with local etc
+- Contract address usage, build with ropsten address, develop with local etc
+
+## Public Ethereum wallet for certification:
+
+`0x109B58ED673Bb241d170b87e4F88c5f426781fC9`

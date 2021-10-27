@@ -118,12 +118,12 @@ const Listings = () => {
     }
   }, [active]);
 
-  if (status === listingState.LOADING) {
-    return <Spinner animation="border" size="sm" style={{ color: colors.green, marginTop: '20px' }} />;
-  }
-
   if (!active) {
     return <NotActive />;
+  }
+
+  if (status === listingState.LOADING) {
+    return <Spinner animation="border" size="sm" style={{ color: colors.green, marginTop: '20px' }} />;
   }
 
   return (

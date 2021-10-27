@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "UNLICENSED",
   "scripts": {
-    "start": "build:copy && razzle start",
+    "start": "yarn run build:copy && razzle start",
     "build": "razzle build --noninteractive ",
     "build:copy": "cp -a ../build/. contract-build"
   },

@@ -29,7 +29,7 @@ const GlobalError = () => {
   }
   return (
     <StyledContainer fluid>
-      <Text>Please change your network to Ropsten to continue.</Text>
+      <Text>{contentError}</Text>
     </StyledContainer>
   );
 };

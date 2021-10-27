@@ -45,6 +45,10 @@ const MetamaskConnectButton = () => {
     return (
       <ConnectBtn
         onClick={() => {
+          if (!window.ethereum) {
+            setContentError("Looks like you don't have Metamask, you'll need it to use this app.");
+            return;
+          }
           activate(injected, (e) => {
             if (e instanceof UnsupportedChainIdError) {
               setContentError('Only Ropsten supported.');
