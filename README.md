@@ -1,5 +1,28 @@
 # Final project idea - Automated rental agreements
 
+## Deployed version url:
+
+https://final-project-ten.vercel.app/
+
+## How to run this project locally:
+
+### Frontend
+
+- `cd client`
+- `yarn install`
+- `yarn start`
+- Open `http://localhost:3000`
+
+### Contracts
+
+- Run commands in project root
+- Run local testnet in port `7545` with e.g. Ganache
+- Run tests: `truffle test`
+
+## Screencast link
+
+- TBA
+
 ## Project description
 
 User and apartment owner enter an agreement for renting a property, i.e. exchanging usage rights to an apartment for as long as payments are made to a specific Ethereum account before the agreed deadline.
@@ -28,7 +51,7 @@ User receives a keycode / access token to the apartment after first payment. If 
 
 ## Directory structure
 
-- `client`: Project's React frontend. Run with `cd client && yarn start`. Access deployed version in https://final-project-ten.vercel.app/
+- `client`: Project's React frontend. Run with `cd client && yarn start`.
 - `contracts`: Smart contracts that are deployed in the Ropsten testnet.
 - `migrations`: Migration files for deploying contracts in `contracts` directory.
 - `test`: Tests for smart contracts.
