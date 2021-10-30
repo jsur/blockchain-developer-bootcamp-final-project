@@ -15,8 +15,8 @@ https://final-project-ten.vercel.app/
 
 ### Contracts
 
-- Run commands in project root
 - Run local testnet in port `7545` with e.g. Ganache
+- In project root:
 - Run tests: `truffle test`
 
 ## Screencast link
@@ -55,7 +55,7 @@ User receives a keycode / access token to the apartment after first payment. If 
 
 ## Directory structure
 
-- `client`: Project's React frontend. Run with `cd client && yarn start`.
+- `client`: Project's React frontend.
 - `contracts`: Smart contracts that are deployed in the Ropsten testnet.
 - `migrations`: Migration files for deploying contracts in `contracts` directory.
 - `test`: Tests for smart contracts.
