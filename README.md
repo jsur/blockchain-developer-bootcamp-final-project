@@ -1,4 +1,4 @@
-# Final project idea - Automated rental agreements
+# Final project - Automated rental agreements
 
 ## Deployed version url:
 
@@ -22,6 +22,10 @@ https://final-project-ten.vercel.app/
 ## Screencast link
 
 - TBA
+
+## Public Ethereum wallet for certification:
+
+`0x109B58ED673Bb241d170b87e4F88c5f426781fC9`
 
 ## Project description
 
@@ -63,12 +67,13 @@ ROPSTEN_INFURA_PROJECT_ID=
 ROPSTEN_MNEMONIC=
 ```
 
-## TODO:
+## TODO final project requirements:
 
-- Tenant payments tracking
-- Tenant removal
+- Contract ABI json creation: Should it be included in build phase?
 - Contract address usage, build with ropsten address, develop with local etc
 
-## Public Ethereum wallet for certification:
+## TODO features
 
-`0x109B58ED673Bb241d170b87e4F88c5f426781fC9`
+- Home page behavior / state handling without Metamask
+- Tenant payments tracking
+- Tenant removal
