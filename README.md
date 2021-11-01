@@ -15,9 +15,9 @@ https://final-project-ten.vercel.app/
 
 ### Contracts
 
-- Run local testnet in port `7545` with e.g. Ganache
-- In project root:
-- Run tests: `truffle test`
+- Run local testnet in port `7545` with an Ethereum client, e.g. Ganache
+- `truffle console --network development`
+- Run tests in Truffle console: `test`
 
 ### How to populate locally deployed contract with listings
 
@@ -31,6 +31,7 @@ https://final-project-ten.vercel.app/
 - Send ETH to local wallet: `web3.eth.sendTransaction({ from: "<your local address>", to: "<your local wallet>", value: web3.utils.toWei("10") })`
 - `cd client && yarn start`
 - Open local ui from `http://localhost:3000`
+- If you get `TXRejectedError` when sending a transaction, reset your Metamask account from Advanced settings.
 
 ## Screencast link
 
