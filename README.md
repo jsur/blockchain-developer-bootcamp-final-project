@@ -23,7 +23,7 @@ https://final-project-ten.vercel.app/
 
 - Migrate contracts to local testnet
 - Replace `CONTRACT_ADDRESS_RENTALS` in `client/src/constants.js` with `Rentals` contract address string
-- `truffle console`
+- `truffle console --network development`
 - `let rr = await Rentals.deployed()`
 - Add two listings:
 - `rr.addProperty(web3.utils.toWei("0.00156"), "Hämeentie 77", "Duplex with a nice view", "https://google.com","https://www.hermannikuvia.fi/wp-content/uploads/Hameentie-77-sisapiha.jpg")`

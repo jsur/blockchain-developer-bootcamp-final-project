@@ -73,7 +73,6 @@ contract Rentals is Ownable {
       // TODO: add this again
       // _p.tenantPayments.push(Payment({ timestamp: block.timestamp, amount: msg.value, from: msg.sender }));
       _p.status = State.Rented;
-
       address owner = owner();
       (bool success, ) = owner.call{ value: msg.value }("");
       require(success, "Adding tenant to property failed.");
