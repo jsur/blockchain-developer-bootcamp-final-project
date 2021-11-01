@@ -19,6 +19,19 @@ https://final-project-ten.vercel.app/
 - In project root:
 - Run tests: `truffle test`
 
+### How to populate locally deployed contract with listings
+
+- Migrate contracts to local testnet
+- Replace `CONTRACT_ADDRESS_RENTALS` in `client/src/constants.js` with `Rentals` contract address string
+- `truffle console`
+- `let rr = await Rentals.deployed()`
+- Add two listings:
+- `rr.addProperty(web3.utils.toWei("0.00156"), "Hämeentie 77", "Duplex with a nice view", "https://google.com","https://www.hermannikuvia.fi/wp-content/uploads/Hameentie-77-sisapiha.jpg")`
+- `rr.addProperty(web3.utils.toWei("0.002"), "Mannerheimintie 30 A", "Duplex with a really bad view", "https://google.com","https://www.finna.fi/Cover/Show?id=hkm.HKMS000005%3Akm002zsb&index=0&size=large&source=Solr")`
+- Send ETH to local wallet: `web3.eth.sendTransaction({ from: "<your local address>", to: "<your local wallet>", value: web3.utils.toWei("10") })`
+- `cd client && yarn start`
+- Open local ui from `http://localhost:3000`
+
 ## Screencast link
 
 - TBA
@@ -69,8 +82,7 @@ ROPSTEN_MNEMONIC=
 
 ## TODO final project requirements:
 
-- Contract ABI json creation: Should it be included in build phase?
-- Contract address usage, build with ropsten address, develop with local etc
+- Streamline local startup process
 
 ## TODO features
 

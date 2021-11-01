@@ -1,19 +1,18 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.8;
+pragma solidity 0.8.0;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title Contract for automated apartment rentals
 /// @author Julius Suominen
 /// @notice Allows a user to obtain tenantship of a listed apartment
 /// @dev Payment tracking will be implemented using a Gelato resolver and contract function checkPayments
-contract Rentals {
+contract Rentals is Ownable {
 
   /// @notice Emitted when a tenant is added to a property
   /// @param property Property id
   /// @param tenant Tenant address
   event LogTenantAdded(uint indexed property, address indexed tenant);
-  
-  /// @notice Contract owner address
-  address payable public owner = payable(msg.sender);
 
   /// @dev Tracks given property ids. Current value is the newest property id.
   uint private propertyIdCounter = 0;
@@ -59,11 +58,6 @@ contract Rentals {
     _;
   }
 
-  modifier isOwner() {
-    require(msg.sender == owner, "Only the contract owner is allowed to call this function.");
-    _;
-  }
-
   constructor() {}
 
   /// @notice Adds a tenant to a given property id
@@ -79,6 +73,8 @@ contract Rentals {
       // TODO: add this again
       // _p.tenantPayments.push(Payment({ timestamp: block.timestamp, amount: msg.value, from: msg.sender }));
       _p.status = State.Rented;
+
+      address owner = owner();
       (bool success, ) = owner.call{ value: msg.value }("");
       require(success, "Adding tenant to property failed.");
       emit LogTenantAdded(_propertyId, msg.sender);
@@ -91,24 +87,29 @@ contract Rentals {
   /// @param _infoUrl Url to additional information about listing, stored off-chain.
   /// @param _imgUrl Url to an image of listing to be displayed in the web app.
   /// @dev HTTP GET to _infoUrl should return an array with information in the following format: { infoId: string, value: string, title: string }[].
-  function addProperty(uint rentAmount, string memory _location, string memory _description, string memory _infoUrl, string memory _imgUrl) public isOwner {
-    uint newPropertyId = propertyIdCounter + 1;
-    Property memory newProperty = Property({
-      propertyId: newPropertyId,
-      currentRentAmount: rentAmount,
-      status: State.Vacant,
-      tenant: payable(address(0)),
-      location: _location,
-      description: _description,
-      infoUrl: _infoUrl,
-      imgUrl: _imgUrl
-      // TODO: figure out a way to initialize this as an empty array
-      // tenantPayments: [Payment({ timestamp: 0, amount: 0, from: address(0) })]
-    });
-    propertyIdCounter = newPropertyId;
-    idList.push(newPropertyId);
-    idListLength = idList.length;
-    properties[newProperty.propertyId] = newProperty;
+  function addProperty(
+    uint rentAmount,
+    string memory _location,
+    string memory _description,
+    string memory _infoUrl,
+    string memory _imgUrl) public onlyOwner {
+      uint newPropertyId = propertyIdCounter + 1;
+      Property memory newProperty = Property({
+        propertyId: newPropertyId,
+        currentRentAmount: rentAmount,
+        status: State.Vacant,
+        tenant: payable(address(0)),
+        location: _location,
+        description: _description,
+        infoUrl: _infoUrl,
+        imgUrl: _imgUrl
+        // TODO: figure out a way to initialize this as an empty array
+        // tenantPayments: [Payment({ timestamp: 0, amount: 0, from: address(0) })]
+      });
+      propertyIdCounter = newPropertyId;
+      idList.push(newPropertyId);
+      idListLength = idList.length;
+      properties[newProperty.propertyId] = newProperty;
   }
 
   /// @notice Checks each rented listing for payments
@@ -117,13 +118,15 @@ contract Rentals {
     // TODO: use this external function from gelato to schedule call every day
   }
 
-  function removeTenant() private isOwner {
-    // TODO: remove tenant from a Property and set status to NotAvailable
+  /// @notice Remove tenant from a listing
+  /// @dev Only the contract owner can call this
+  function removeTenant() private onlyOwner {
+    // TODO: remove tenant from a listing and set status to NotAvailable
   }
 
   /// @notice Withdraw contract funds
   /// @dev Only the contract owner can call this
-  function withdraw() public isOwner {
+  function withdraw() public onlyOwner {
     // TODO: withdraw any funds from contract
   }
 
