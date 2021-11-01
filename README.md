@@ -73,7 +73,7 @@ User receives a keycode / access token to the apartment after first payment. If 
 - `migrations`: Migration files for deploying contracts in `contracts` directory.
 - `test`: Tests for smart contracts.
 
-## Environment variables
+## Environment variables (not needed for running project locally)
 
 ```
 ROPSTEN_INFURA_PROJECT_ID=
@@ -82,10 +82,13 @@ ROPSTEN_MNEMONIC=
 
 ## TODO final project requirements:
 
+- Add contract tests
 - Streamline local startup process
+- Add screencast
 
 ## TODO features
 
 - Home page behavior / state handling without Metamask
 - Tenant payments tracking
 - Tenant removal
+- Fund withdrawal
