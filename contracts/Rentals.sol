@@ -14,6 +14,11 @@ contract Rentals is Ownable {
   /// @param tenant Tenant address
   event LogTenantAdded(uint indexed property, address indexed tenant);
 
+  /// @notice Emitted when a new property is added
+  /// @param property Property id
+  /// @param rentAmount Rent amount
+  event LogPropertyAdded(uint indexed property, uint indexed rentAmount);
+
   /// @dev Tracks given property ids. Current value is the newest property id.
   uint private propertyIdCounter = 0;
 
@@ -109,6 +114,7 @@ contract Rentals is Ownable {
       idList.push(newPropertyId);
       idListLength = idList.length;
       properties[newProperty.propertyId] = newProperty;
+      emit LogPropertyAdded(newProperty.propertyId, rentAmount);
   }
 
   /// @notice Checks each rented listing for payments
