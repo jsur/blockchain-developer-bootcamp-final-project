@@ -12,13 +12,14 @@ import { colors } from '../../theme';
 
 const DetailsState = {
   LOADING: 'LOADING',
+  WAITING: 'WAITING_CONFIRMATIONS',
   READY: 'READY',
   ERROR: 'ERROR',
   SOLD: 'SOLD',
 };
 
-const CONFIRMATIONS_WAIT = 1; // TODO: does wait() work? https://github.com/ethers-io/ethers.js/issues/945
 const KEYCODE_DUMMY = 455224;
+const CONFIRMATION_COUNT = 2;
 
 const BuyButton = styled(Button).attrs({ variant: 'outline-success' })`
   color: ${colors.green};
@@ -31,16 +32,14 @@ const Details = ({ location }) => {
   const [mmError, setMmError] = useState(null);
   const [txHash, setTxHash] = useState(null);
   const [listing, setListing] = useState(undefined);
-  const { active, account } = useWeb3React();
+  const { active, account, chainId } = useWeb3React();
   const contract = useContract(CONTRACT_ADDRESS_RENTALS, RentalsABI.abi);
-
   const searchParams = new URLSearchParams(location.search);
   const propertyId = searchParams.get('id');
 
   useEffect(() => {
     const getListing = async () => {
       const listing = await contract.properties(Number(propertyId));
-      console.log('listing is:', listing);
       setListing(listing);
     };
     getListing();
@@ -49,12 +48,13 @@ const Details = ({ location }) => {
   const onBuyClick = async () => {
     setStatus(DetailsState.LOADING);
     try {
+      setStatus(DetailsState.WAITING);
       const transaction = await contract.addAsTenant(propertyId, {
         from: account,
         value: listing.currentRentAmount,
       });
-      console.log('transaction:', transaction);
-      await transaction.wait(CONFIRMATIONS_WAIT);
+      const confirmations = chainId === 1337 ? 1 : CONFIRMATION_COUNT;
+      await transaction.wait(confirmations);
       setTxHash(transaction.hash);
       setStatus(DetailsState.SOLD);
     } catch (e) {
@@ -67,15 +67,19 @@ const Details = ({ location }) => {
 
   if (!active) return <Redirect to="/" />;
 
-  const { LOADING, READY, SOLD, ERROR } = DetailsState;
+  const { LOADING, WAITING, READY, SOLD, ERROR } = DetailsState;
 
   return (
     <Container fluid className="mt-5 d-flex flex-column justify-content-center align-items-center">
       <Text t1>Details</Text>
       <Text>Off-chain listing details here (AWS S3 etc.) or something TODO</Text>
-      {status === LOADING && (
-        <Spinner animation="border" size="sm" style={{ color: colors.green, marginTop: '20px' }} />
-      )}
+      {status === LOADING ||
+        (status === WAITING && (
+          <>
+            <Spinner animation="border" size="sm" style={{ color: colors.green, marginTop: '20px' }} />
+            {status === WAITING && <Text>The apartment is yours after {CONFIRMATION_COUNT} block confirmations.</Text>}
+          </>
+        ))}
       {status === READY && (
         <BuyButton disabled={!listing} onClick={onBuyClick}>
           I want this

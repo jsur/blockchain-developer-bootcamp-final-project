@@ -22,6 +22,8 @@ const listingState = {
 const StyledDiv = styled.div`
   display: flex;
   justify-content: center;
+  max-width: 90%;
+  flex-wrap: wrap;
 `;
 
 const StyledItem = styled.div`
@@ -30,13 +32,13 @@ const StyledItem = styled.div`
   align-items: center;
   padding: 10px;
   border-radius: 5px;
+  max-width: 175px;
 `;
 
 const StyledItemTextContainer = styled.div`
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
 `;
 
 const FilteredListing = ({ listings, status }) => {
@@ -76,16 +78,22 @@ const ListingItem = ({ item }) => {
   const { propertyId, description, location, currentRentAmount: amount, imgUrl } = item;
   return (
     <StyledItem>
-      {/* TODO: use imgUrl and not infoUrl */}
-      <img src={imgUrl} alt="listing" style={{ height: '150px', width: '150px', borderRadius: '5px' }} />
+      <img src={imgUrl} alt="listing" style={{ height: '150px', width: '100%', borderRadius: '5px' }} />
       <StyledItemTextContainer>
-        <Text>{description}</Text>
-        <Text>{location}</Text>
-        <Text>{formatEther(amount)} ETH / month</Text>
+        <Text center>{description}</Text>
+        <Text center bold color={colors.green}>
+          {formatEther(amount)} ETH/mo
+        </Text>
+        <Text center>{location}</Text>
         {item.status === 0 && (
-          <Link to={{ pathname: '/details', search: `?id=${BigNumber.from(propertyId).toNumber()}` }}>More info</Link>
+          <Link
+            style={{ textAlign: 'center' }}
+            to={{ pathname: '/details', search: `?id=${BigNumber.from(propertyId).toNumber()}` }}
+          >
+            More info
+          </Link>
         )}
-        {item.status === 1 && item.tenant && <Text>Tenant: {shortenAddress(item.tenant)}</Text>}
+        {item.status === 1 && item.tenant && <Text center>Tenant: {shortenAddress(item.tenant)}</Text>}
       </StyledItemTextContainer>
     </StyledItem>
   );
