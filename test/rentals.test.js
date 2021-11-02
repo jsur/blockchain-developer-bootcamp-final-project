@@ -5,8 +5,33 @@ const getErrorObj = (obj = {}) => {
   return obj[txHash];
 };
 
+const addFirstProperty = async (instance, tx = {}) => {
+  await instance.addProperty(
+    web3.utils.toWei("0.00156"),
+    "Hämeentie 77",
+    "Duplex with a nice view",
+    "https://google.com",
+    "https://www.hermannikuvia.fi/wp-content/uploads/Hameentie-77-sisapiha.jpg",
+    tx
+  );
+};
+
+const addSecondProperty = async (instance, tx = {}) => {
+  await instance.addProperty(
+    web3.utils.toWei("0.002"),
+    "Mannerheimintie 30 A",
+    "Duplex with a really bad view",
+    "https://google.com",
+    "https://www.finna.fi/Cover/Show?id=hkm.HKMS000005%3Akm002zsb&index=0&size=large&source=Solr",
+    tx
+  );
+};
+
 const ERR_NOT_VACANT = "This property is not vacant.";
 const ERR_EXACT_AMOUNT = "Please pay exact rent amount.";
+const ERR_NOT_OWNER = "Ownable: caller is not the owner";
+
+const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 const Status = {
   VACANT: 0,
@@ -19,22 +44,8 @@ contract("Rentals", function (accounts) {
 
   beforeEach(async () => {
     instance = await Rentals.new();
-    await instance.addProperty(
-      web3.utils.toWei("0.00156"),
-      "Hämeentie 77",
-      "Duplex with a nice view",
-      "https://google.com",
-      "https://www.hermannikuvia.fi/wp-content/uploads/Hameentie-77-sisapiha.jpg",
-      { from: owner }
-    );
-    await instance.addProperty(
-      web3.utils.toWei("0.002"),
-      "Mannerheimintie 30 A",
-      "Duplex with a really bad view",
-      "https://google.com",
-      "https://www.finna.fi/Cover/Show?id=hkm.HKMS000005%3Akm002zsb&index=0&size=large&source=Solr",
-      { from: owner }
-    );
+    await addFirstProperty(instance, { from: owner });
+    await addSecondProperty(instance, { from: owner });
   });
 
   /**
@@ -104,6 +115,38 @@ contract("Rentals", function (accounts) {
       const listing = await instance.properties(LISTING_ID);
       const rent = listing.currentRentAmount.toNumber();
       assert.equal(balanceAfter - balanceBefore, rent);
+    });
+  });
+
+  describe("addProperty()", () => {
+    /**
+     * Verify ownable usage in function.
+     */
+    it("should allow only the owner to add properties", async () => {
+      try {
+        await addFirstProperty(instance, { from: secondAccount });
+      } catch (e) {
+        const { error, reason } = getErrorObj(e.data);
+        assert.equal(error, "revert");
+        assert.equal(reason, ERR_NOT_OWNER);
+      }
+    });
+
+    /**
+     * Verify:
+     * * given property gets added to properties mapping
+     * * length counter gets incremented
+     */
+    it("should add a property to properties mapping", async () => {
+      const idListLengthBefore = await instance.idListLength();
+      await addSecondProperty(instance, { from: owner });
+      const idListLengthAfter = await instance.idListLength();
+      assert.equal(
+        idListLengthAfter.toNumber(),
+        idListLengthBefore.toNumber() + 1
+      );
+      const { tenant } = await instance.properties(3);
+      assert.equal(tenant, ADDRESS_ZERO);
     });
   });
 });
