@@ -6,18 +6,20 @@ https://final-project-ten.vercel.app/
 
 ## How to run this project locally:
 
+### Contracts
+
+- Run `yarn install` in project root to install Truffle build and smart contract dependencies
+- Run local testnet in port `7545` with an Ethereum client, e.g. Ganache
+- `truffle migrate --network development`
+- `truffle console --network development`
+- Run tests in Truffle console: `test`
+
 ### Frontend
 
 - `cd client`
 - `yarn install`
 - `yarn start`
 - Open `http://localhost:3000`
-
-### Contracts
-
-- Run local testnet in port `7545` with an Ethereum client, e.g. Ganache
-- `truffle console --network development`
-- Run tests in Truffle console: `test`
 
 ### How to populate locally deployed contract with listings
 
