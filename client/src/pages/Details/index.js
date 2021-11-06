@@ -72,11 +72,18 @@ const Details = ({ location }) => {
   return (
     <Container fluid className="mt-5 d-flex flex-column justify-content-center align-items-center">
       <Text t1>Details</Text>
-      <Text>Off-chain listing details here (AWS S3 etc.) or something TODO</Text>
+      <Text style={{ maxWidth: '50%', margin: '10px', textAlign: 'center' }}>
+        Off chain listing details: Nullam quis arcu vitae sapien pulvinar viverra sed eget libero. Mauris vel sapien
+        rhoncus, sodales massa sit amet, congue mi. Praesent feugiat gravida erat, sit amet auctor tortor mattis non.
+      </Text>
       {status === LOADING ||
         (status === WAITING && (
           <>
-            <Spinner animation="border" size="sm" style={{ color: colors.green, marginTop: '20px' }} />
+            <Spinner
+              animation="border"
+              size="sm"
+              style={{ color: colors.green, marginTop: '20px', marginBottom: '20px' }}
+            />
             {status === WAITING && <Text>The apartment is yours after {CONFIRMATION_COUNT} block confirmations.</Text>}
           </>
         ))}
@@ -101,7 +108,7 @@ const Details = ({ location }) => {
       )}
       {status === ERROR && (
         <>
-          <Text style={{ marginTop: '10px' }} color={colors.red}>
+          <Text style={{ marginTop: '20px', marginBottom: '20px' }} color={colors.red}>
             {mmError || 'Error encountered!'}
           </Text>
           <Link to="/">Back to front page</Link>

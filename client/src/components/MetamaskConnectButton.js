@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import Button from 'react-bootstrap/Button';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
 import Text from './Text';
-import Card from './Card';
+import { StyledHeaderBox } from './StyledHelpers';
 import { injected } from '../connectors';
 import { shortenAddress } from '../utils/shortenAddress';
 import { useAppContext } from '../AppContext';
 
-const ConnectBtn = styled(Button).attrs({ variant: 'outline-light' })``;
+const ConnectBtn = styled.button`
+  border: 1px solid white;
+  background: transparent;
+  color: white;
+  border-radius: 5px;
+  margin-left: 10px;
+`;
 
 const pageState = {
   LOADING: 'LOADING',
@@ -62,12 +67,12 @@ const MetamaskConnectButton = () => {
   }
 
   return (
-    <Card className="d-flex flex-row justify-content-between align-items-center" style={{ maxWidth: 300 }}>
-      <Text uppercase color="white">
+    <StyledHeaderBox>
+      <Text uppercase color="green">
         {shortenAddress(account)}
       </Text>
       <ConnectBtn onClick={() => onLogOut(deactivate, () => history.push('/'))}>Log Out</ConnectBtn>
-    </Card>
+    </StyledHeaderBox>
   );
 };
 

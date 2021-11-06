@@ -33,8 +33,7 @@ contract Rentals is Ownable {
     string description;
     string infoUrl;
     string imgUrl;
-    // TODO: add this back once array init works
-    // Payment[] tenantPayments;
+    Payment latestTenantPayment;
   }
 
   struct Payment {
@@ -75,8 +74,7 @@ contract Rentals is Ownable {
     isExactPayment(_propertyId) {
       Property storage _p = properties[_propertyId];
       _p.tenant = payable(msg.sender);
-      // TODO: add this again
-      // _p.tenantPayments.push(Payment({ timestamp: block.timestamp, amount: msg.value, from: msg.sender }));
+      _p.latestTenantPayment = Payment({ timestamp: block.timestamp, amount: msg.value, from: msg.sender });
       _p.status = State.Rented;
       address owner = owner();
       (bool success, ) = owner.call{ value: msg.value }("");
@@ -98,6 +96,7 @@ contract Rentals is Ownable {
     string memory _infoUrl,
     string memory _imgUrl) public onlyOwner {
       uint newPropertyId = propertyIdCounter + 1;
+
       Property memory newProperty = Property({
         propertyId: newPropertyId,
         currentRentAmount: rentAmount,
@@ -106,10 +105,10 @@ contract Rentals is Ownable {
         location: _location,
         description: _description,
         infoUrl: _infoUrl,
-        imgUrl: _imgUrl
-        // TODO: figure out a way to initialize this as an empty array
-        // tenantPayments: [Payment({ timestamp: 0, amount: 0, from: address(0) })]
+        imgUrl: _imgUrl,
+        latestTenantPayment: Payment({ timestamp: block.timestamp, from: address(0), amount: 0 })
       });
+
       propertyIdCounter = newPropertyId;
       idList.push(newPropertyId);
       idListLength = idList.length;

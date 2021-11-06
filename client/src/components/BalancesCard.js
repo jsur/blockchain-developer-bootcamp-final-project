@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import Text from './Text';
-import Card from './Card';
+import { StyledHeaderBox } from './StyledHelpers';
 import { colors } from '../theme';
 import useEth from '../hooks/useEth';
 
@@ -20,11 +20,11 @@ const BalanceCard = () => {
   }
 
   return (
-    <Card className="d-flex flex-row align-items-center" style={{ maxWidth: 250, height: 80 }}>
+    <StyledHeaderBox>
       <Text block color={colors.green}>
         ETH balance: {ethBalance}
       </Text>
-    </Card>
+    </StyledHeaderBox>
   );
 };
 
