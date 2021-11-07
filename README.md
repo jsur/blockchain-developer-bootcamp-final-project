@@ -2,7 +2,7 @@
 
 ## Deployed version url:
 
-https://final-project-ten.vercel.app/
+https://final-project-jsur.vercel.app
 
 ## How to run this project locally:
 
