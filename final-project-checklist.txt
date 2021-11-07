@@ -33,7 +33,7 @@ Please answer the following questions. Does your project:
 2) Accessing orâ€”if your project needs a server (not required)â€”running your project
 3) Running your smart contract unit tests and which port a local testnet should be running on. YES
 
-10. A screencast of you walking through your project? YES/NO
+10. A screencast of you walking through your project? YES
 
 
 Congratulations on finishing your final project!
