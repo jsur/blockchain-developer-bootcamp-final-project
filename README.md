@@ -6,6 +6,11 @@ https://final-project-jsur.vercel.app
 
 ## How to run this project locally:
 
+### Prerequisites
+
+- Node.js => v14
+- Truffle and Ganache
+
 ### Contracts
 
 - Run `yarn install` in project root to install Truffle build and smart contract dependencies
@@ -34,11 +39,12 @@ https://final-project-jsur.vercel.app
 - Send ETH to local wallet: `web3.eth.sendTransaction({ from: "<your local address>", to: "<your local network wallet>", value: web3.utils.toWei("10") })`
 - `cd client && yarn start`
 - Open local ui from `http://localhost:3000`
+- Make sure your Metamask localhost network is in port `7545`.
 - If you get `TXRejectedError` when sending a transaction, reset your Metamask account from Advanced settings.
 
 ## Screencast link
 
-- TBA
+https://youtu.be/enwECpgoQUg
 
 ## Public Ethereum wallet for certification:
 
@@ -83,11 +89,6 @@ User receives a keycode / access token to the apartment after first payment. If 
 ROPSTEN_INFURA_PROJECT_ID=
 ROPSTEN_MNEMONIC=
 ```
-
-## TODO final project requirements:
-
-- Streamline local startup process
-- Add screencast
 
 ## TODO features
 
