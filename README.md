@@ -92,7 +92,6 @@ ROPSTEN_MNEMONIC=
 
 ## TODO features
 
-- Home page behavior / state handling without Metamask
 - Tenant payments tracking
 - Tenant removal
 - Fund withdrawal
