@@ -8,8 +8,10 @@ https://final-project-jsur.vercel.app
 
 ### Prerequisites
 
-- Node.js => v14
+- Node.js >= v14
 - Truffle and Ganache
+- Yarn
+- `git checkout master`
 
 ### Contracts
 
@@ -59,7 +61,7 @@ User receives a keycode / access token to the apartment after first payment. If 
 - Checking for received payments and transferring ownership back to owner on non-payment cases could be scheduled with e.g. Gelato Network (https://docs.gelato.network/tutorial).
 - Opening door locks could be done with an app with smart locks, e.g. https://api.getkisi.com/docs. Smart lock APIs won't be explored in this project.
 
-## Simple work flow
+## Simple workflow
 
 1. Enter service web site
 2. Login with Metamask
