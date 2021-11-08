@@ -69,7 +69,7 @@ User receives a keycode / access token to the apartment after first payment. If 
 6. Tenantship is transferred to user account (smart contract call)
 7. Receive key phrase / token / OTP / etc. to access apartment with smart lock app (this part will be mocked in project)
 
-## Scheduled workflow for late payments
+## Scheduled workflow for late payments (Not implemented)
 
 1. Run scheduled contract weekly (Gelato? https://docs.gelato.network/tutorial)
 2. Check for made payments for each rental agreement (from renter wallet to owner wallet)
