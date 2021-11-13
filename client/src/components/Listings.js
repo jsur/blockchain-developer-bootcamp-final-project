@@ -10,7 +10,6 @@ import { useContract } from '../hooks/useContract';
 import { shortenAddress } from '../utils/shortenAddress';
 import { colors } from '../theme';
 
-import { CONTRACT_ADDRESS_RENTALS } from '../constants';
 import RentalsABI from '../../contract-build/contracts/Rentals.json';
 
 const listingState = {
@@ -58,22 +57,6 @@ const FilteredListing = ({ listings, status }) => {
   );
 };
 
-const NotActive = () => {
-  return (
-    <Text>
-      Connect{' '}
-      {
-        <Text>
-          <a style={{ color: colors.green }} href="https://faucet.ropsten.be/" target="blank">
-            Ropsten
-          </a>
-        </Text>
-      }{' '}
-      wallet to continue.
-    </Text>
-  );
-};
-
 const ListingItem = ({ item }) => {
   const { propertyId, description, location, currentRentAmount: amount, imgUrl } = item;
   return (
@@ -99,11 +82,11 @@ const ListingItem = ({ item }) => {
   );
 };
 
-const Listings = () => {
+const Listings = ({ rentalsAddress }) => {
   const [listings, setListings] = useState([]);
   const [status, setStatus] = useState(listingState.LOADING);
   const { active } = useWeb3React();
-  const contract = useContract(CONTRACT_ADDRESS_RENTALS, RentalsABI.abi);
+  const contract = useContract(rentalsAddress, RentalsABI.abi);
 
   const getProperties = useCallback(async (contract) => {
     try {
@@ -127,7 +110,7 @@ const Listings = () => {
   }, [active]);
 
   if (!active) {
-    return <NotActive />;
+    return null;
   }
 
   if (status === listingState.LOADING) {

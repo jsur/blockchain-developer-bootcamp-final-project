@@ -15,6 +15,10 @@ function getLibrary(provider) {
 }
 
 const App = () => {
+  if (window.ethereum) {
+    window.ethereum.on('networkChanged', () => window.location.reload());
+  }
+
   return (
     <AppContextProvider>
       <Web3ReactProvider getLibrary={getLibrary}>

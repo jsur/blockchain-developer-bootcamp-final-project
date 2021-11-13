@@ -4,8 +4,9 @@ import { Button, Container, Spinner } from 'react-bootstrap';
 import { useWeb3React } from '@web3-react/core';
 import { Link, Redirect } from 'react-router-dom';
 import { useContract } from '../../hooks/useContract';
+import { useRentals } from '../../hooks/useRentals';
 import Text from '../../components/Text';
-import { CONTRACT_ADDRESS_RENTALS } from '../../constants';
+
 import RentalsABI from '../../../contract-build/contracts/Rentals.json';
 
 import { colors } from '../../theme';
@@ -27,13 +28,13 @@ const BuyButton = styled(Button).attrs({ variant: 'outline-success' })`
   margin-top: 20px;
 `;
 
-const Details = ({ location }) => {
+const Details = ({ location, rentalsAddress }) => {
   const [status, setStatus] = useState(DetailsState.READY);
   const [mmError, setMmError] = useState(null);
   const [txHash, setTxHash] = useState(null);
   const [listing, setListing] = useState(undefined);
   const { active, account, chainId } = useWeb3React();
-  const contract = useContract(CONTRACT_ADDRESS_RENTALS, RentalsABI.abi);
+  const contract = useContract(rentalsAddress, RentalsABI.abi);
   const searchParams = new URLSearchParams(location.search);
   const propertyId = searchParams.get('id');
 
@@ -103,7 +104,6 @@ const Details = ({ location }) => {
               Etherscan
             </Link>
           </Text>
-          <Link to="/">Back to front page</Link>
         </>
       )}
       {status === ERROR && (
@@ -111,11 +111,19 @@ const Details = ({ location }) => {
           <Text style={{ marginTop: '20px', marginBottom: '20px' }} color={colors.red}>
             {mmError || 'Error encountered!'}
           </Text>
-          <Link to="/">Back to front page</Link>
         </>
       )}
+      <Link style={{ marginTop: '20px' }} to="/">
+        Back to front page
+      </Link>
     </Container>
   );
 };
 
-export default Details;
+const DetailsWrapper = ({ location }) => {
+  const { rentalsAddress } = useRentals();
+  if (!rentalsAddress) return null;
+  return <Details location={location} rentalsAddress={rentalsAddress} />;
+};
+
+export default DetailsWrapper;

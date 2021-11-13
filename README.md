@@ -20,10 +20,10 @@ https://final-project-jsur.vercel.app
 - `truffle migrate --network development`
 - `truffle console --network development`
 - Run tests in Truffle console: `test`
+- `development` network id is 1337, remember to change it in Metamask as well!
 
 ### Frontend
 
-- Replace `CONTRACT_ADDRESS_RENTALS` in `client/src/constants.js` with your locally deployed `Rentals` contract address string
 - `cd client`
 - `yarn install`
 - `yarn start`
@@ -31,8 +31,7 @@ https://final-project-jsur.vercel.app
 
 ### How to populate locally deployed contract with listings
 
-- Migrate contracts to local testnet
-- Replace `CONTRACT_ADDRESS_RENTALS` in `client/src/constants.js` with `Rentals` contract address string
+- `truffle migrate --network development`
 - `truffle console --network development`
 - `let rr = await Rentals.deployed()`
 - Add two listings:
@@ -41,7 +40,7 @@ https://final-project-jsur.vercel.app
 - Send ETH to local wallet: `web3.eth.sendTransaction({ from: "<your local address>", to: "<your local network wallet>", value: web3.utils.toWei("10") })`
 - `cd client && yarn start`
 - Open local ui from `http://localhost:3000`
-- Make sure your Metamask localhost network is in port `7545`.
+- Make sure your Metamask localhost network is in port `7545` and chain id is `1337`.
 - If you get `TXRejectedError` when sending a transaction, reset your Metamask account from Advanced settings.
 
 ## Screencast link
