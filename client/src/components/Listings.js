@@ -40,6 +40,58 @@ const StyledItemTextContainer = styled.div`
   flex-direction: column;
 `;
 
+const StyledRentedDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+  padding: 10px;
+`;
+
+const RentedListings = ({ listings }) => {
+  const filtered = listings
+    .filter((l) => l.status === 1)
+    .map((l) => {
+      return {
+        ...l,
+        latestTenantPayment: {
+          ...l.latestTenantPayment,
+          timestampDate: new Date(l.latestTenantPayment.timestamp.toNumber() * 1000),
+        },
+      };
+    })
+    .sort((a, b) => b.latestTenantPayment.timestampDate - a.latestTenantPayment.timestampDate);
+  return (
+    <StyledRentedDiv>
+      <table>
+        <thead>
+          <tr>
+            {['Listing', 'Tenant', 'Last payment'].map((h) => (
+              <th key={h}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map((l) => {
+            return (
+              <tr key={l.propertyId.toNumber()}>
+                {[l.description, shortenAddress(l.tenant), l.latestTenantPayment.timestampDate.toISOString()].map(
+                  (item) => {
+                    return (
+                      <td>
+                        <Text>{item}</Text>
+                      </td>
+                    );
+                  },
+                )}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </StyledRentedDiv>
+  );
+};
+
 const FilteredListing = ({ listings, status }) => {
   const filtered = listings.filter((l) => l.status === status);
 
@@ -126,7 +178,7 @@ const Listings = ({ rentalsAddress }) => {
       <Text t3 color={colors.red} style={{ marginTop: '20px' }}>
         Rented
       </Text>
-      <FilteredListing listings={listings} status={1} />
+      <RentedListings listings={listings} />
     </>
   );
 };
