@@ -11,7 +11,8 @@ https://final-project-jsur.vercel.app
 - Node.js >= v14
 - Truffle and Ganache
 - Yarn
-- `git checkout master`
+- `git fetch --all --tags`
+- `git checkout tags/v1.0 -b cert`
 
 ### Contracts
 
