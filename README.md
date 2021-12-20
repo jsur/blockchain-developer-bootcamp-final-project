@@ -21,7 +21,6 @@ https://final-project-jsur.vercel.app
 - `truffle migrate --network development`
 - `truffle console --network development`
 - Run tests in Truffle console: `test`
-- `development` network id is 1337, remember to change it in Metamask as well!
 
 ### Frontend
 
@@ -41,7 +40,7 @@ https://final-project-jsur.vercel.app
 - Send ETH to local wallet: `web3.eth.sendTransaction({ from: "<your local address>", to: "<your local network wallet>", value: web3.utils.toWei("10") })`
 - `cd client && yarn start`
 - Open local ui from `http://localhost:3000`
-- Make sure your Metamask localhost network is in port `7545` and chain id is `1337`.
+- Make sure your Metamask localhost network is in port `7545`.
 - If you get `TXRejectedError` when sending a transaction, reset your Metamask account from Advanced settings.
 
 ## Screencast link

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { Button, Container, Spinner } from 'react-bootstrap';
 import { useWeb3React } from '@web3-react/core';
 import { Link, Redirect } from 'react-router-dom';
-import { useContract } from '../../hooks/useContract';
-import { useRentals } from '../../hooks/useRentals';
+import useContract from '../../hooks/useContract';
+import useRentals from '../../hooks/useRentals';
 import Text from '../../components/Text';
 
 import RentalsABI from '../../../contract-build/contracts/Rentals.json';
@@ -113,9 +113,6 @@ const Details = ({ location, rentalsAddress }) => {
           </Text>
         </>
       )}
-      <Link style={{ marginTop: '20px' }} to="/">
-        Back to front page
-      </Link>
     </Container>
   );
 };

@@ -1,22 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Spinner } from 'react-bootstrap';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber } from 'ethers';
 import { formatEther } from '@ethersproject/units';
 import Text from './Text';
-import { useContract } from '../hooks/useContract';
+import Spinner from './Spinner';
+import useListings from '../hooks/useListings';
 import { shortenAddress } from '../utils/shortenAddress';
 import { colors } from '../theme';
-
-import RentalsABI from '../../contract-build/contracts/Rentals.json';
-
-const listingState = {
-  LOADING: 'LOADING',
-  READY: 'READY',
-  ERROR: 'ERROR',
-};
 
 const StyledDiv = styled.div`
   display: flex;
@@ -39,58 +31,6 @@ const StyledItemTextContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
-const StyledRentedDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 65%;
-  padding: 10px;
-`;
-
-const RentedListings = ({ listings }) => {
-  const filtered = listings
-    .filter((l) => l.status === 1)
-    .map((l) => {
-      return {
-        ...l,
-        latestTenantPayment: {
-          ...l.latestTenantPayment,
-          timestampDate: new Date(l.latestTenantPayment.timestamp.toNumber() * 1000),
-        },
-      };
-    })
-    .sort((a, b) => b.latestTenantPayment.timestampDate - a.latestTenantPayment.timestampDate);
-  return (
-    <StyledRentedDiv>
-      <table>
-        <thead>
-          <tr>
-            {['Listing', 'Tenant', 'Last payment'].map((h) => (
-              <th key={h}>{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((l) => {
-            return (
-              <tr key={l.propertyId.toNumber()}>
-                {[l.description, shortenAddress(l.tenant), l.latestTenantPayment.timestampDate.toISOString()].map(
-                  (item) => {
-                    return (
-                      <td>
-                        <Text>{item}</Text>
-                      </td>
-                    );
-                  },
-                )}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </StyledRentedDiv>
-  );
-};
 
 const FilteredListing = ({ listings, status }) => {
   const filtered = listings.filter((l) => l.status === status);
@@ -135,37 +75,14 @@ const ListingItem = ({ item }) => {
 };
 
 const Listings = ({ rentalsAddress }) => {
-  const [listings, setListings] = useState([]);
-  const [status, setStatus] = useState(listingState.LOADING);
   const { active } = useWeb3React();
-  const contract = useContract(rentalsAddress, RentalsABI.abi);
-
-  const getProperties = useCallback(async (contract) => {
-    try {
-      // still on the lookout for optimal solidity data structures, this ain't it
-      const idListLengthBN = await contract.idListLength();
-      const idBNs = await Promise.all(Array.from(Array(idListLengthBN.toNumber())).map((_, i) => contract.idList(i)));
-      const ids = idBNs.map((n) => n.toNumber());
-      const arr = await Promise.all(ids.map((id) => contract.properties(id)));
-      setListings(arr);
-      setStatus(listingState.READY);
-    } catch (e) {
-      console.log('error:', e);
-      setStatus(listingState.ERROR);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (active) {
-      getProperties(contract);
-    }
-  }, [active]);
+  const { listings, loading } = useListings(rentalsAddress);
 
   if (!active) {
     return null;
   }
 
-  if (status === listingState.LOADING) {
+  if (loading) {
     return <Spinner animation="border" size="sm" style={{ color: colors.green, marginTop: '20px' }} />;
   }
 
@@ -175,10 +92,6 @@ const Listings = ({ rentalsAddress }) => {
         Available listings
       </Text>
       <FilteredListing listings={listings} status={0} />
-      <Text t3 color={colors.red} style={{ marginTop: '20px' }}>
-        Rented
-      </Text>
-      <RentedListings listings={listings} />
     </>
   );
 };

@@ -6,7 +6,7 @@ import {
 import { AddressZero } from '@ethersproject/constants';
 import { useWeb3React } from '@web3-react/core';
 
-export function useContract(contractAddress, ABI) {
+const useContract = (contractAddress, ABI) => {
   if (contractAddress === AddressZero) {
     throw Error(`Invalid 'contractAddress' parameter '${contractAddress}'.`);
   }
@@ -18,4 +18,6 @@ export function useContract(contractAddress, ABI) {
   return useMemo(() => {
     return new Contract(contractAddress, ABI, signerOrProvider);
   }, [contractAddress, ABI, signerOrProvider]);
-}
+};
+
+export default useContract;

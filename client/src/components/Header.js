@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { Link, useLocation } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Navbar from 'react-bootstrap/Navbar';
 import { useAppContext } from '../AppContext';
@@ -34,12 +35,19 @@ const GlobalError = () => {
   );
 };
 
+const BackHome = () => {
+  const { pathname } = useLocation();
+  if (pathname === '/') return null;
+  return <Link to="/">Home</Link>;
+};
+
 const Header = () => {
   return (
     <>
       <GlobalError />
       <Navbar className="justify-content-between">
         <BalancesCard />
+        <BackHome />
         <MetamaskConnectButton />
       </Navbar>
     </>
