@@ -6,7 +6,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /// @title Contract for automated apartment rentals
 /// @author Julius Suominen
 /// @notice Allows a user to obtain tenantship of a listed apartment
-/// @dev Payment tracking will be implemented using a Gelato resolver and contract function checkPayments
+/// @dev Payment tracking will be implemented using a Gelato scheduled task and contract function checkPayments
+/// @dev Timestamps in seconds to match block.timestamp unit
 contract Rentals is Ownable {
 
   /// @notice Emitted when a tenant is added to a property
@@ -19,10 +20,13 @@ contract Rentals is Ownable {
   /// @param rentAmount Rent amount
   event LogPropertyAdded(uint indexed property, uint indexed rentAmount);
 
+  event LogUints(uint indexed i, uint indexed idListLength);
+
   /// @dev Tracks given property ids. Current value is the newest property id.
   uint private propertyIdCounter = 0;
 
   enum State{ Vacant, Rented, NotAvailable }
+  enum PaymentState{ Ok, Warning, Alert, HighAlert, Terminated }
 
   struct Property {
     uint propertyId;
@@ -34,20 +38,22 @@ contract Rentals is Ownable {
     string infoUrl;
     string imgUrl;
     Payment latestTenantPayment;
+    uint paymentPeriodSec;
   }
 
   struct Payment {
     uint timestamp;
     uint amount;
     address from;
+    PaymentState paymentStatus;
   }
 
   /// @notice List of all property ids.
-  /// @dev Used as a helper when iterating available properties in frontend client.
+  /// @dev Used as a helper when iterating available properties.
   uint[] public idList;
 
   /// @notice idList length.
-  /// @dev Used as a helper when iterating available properties in frontend client.
+  /// @dev Used as a helper when iterating available properties.
   uint public idListLength;
 
   mapping (uint => Property) public properties;
@@ -74,7 +80,7 @@ contract Rentals is Ownable {
     isExactPayment(_propertyId) {
       Property storage _p = properties[_propertyId];
       _p.tenant = payable(msg.sender);
-      _p.latestTenantPayment = Payment({ timestamp: block.timestamp, amount: msg.value, from: msg.sender });
+      _p.latestTenantPayment = Payment({ timestamp: block.timestamp, amount: msg.value, from: msg.sender, paymentStatus: PaymentState.Ok });
       _p.status = State.Rented;
       address landlord = owner();
       (bool success, ) = landlord.call{ value: msg.value }("");
@@ -106,7 +112,13 @@ contract Rentals is Ownable {
         description: _description,
         infoUrl: _infoUrl,
         imgUrl: _imgUrl,
-        latestTenantPayment: Payment({ timestamp: block.timestamp, from: address(0), amount: 0 })
+        latestTenantPayment: Payment({
+          timestamp: block.timestamp,
+          from: address(0),
+          amount: 0,
+          paymentStatus: PaymentState.Ok
+        }),
+        paymentPeriodSec: 30 * 60 // 30 minutes
       });
 
       propertyIdCounter = newPropertyId;
@@ -117,15 +129,57 @@ contract Rentals is Ownable {
   }
 
   /// @notice Checks each rented listing for payments
-  /// @dev Called by a Gelato resolver once every 7 days
+  /// @dev Called by a Gelato scheduled task
   function checkPayments() external {
-    // TODO: use this external function from gelato to schedule call every day
+    for (uint i = 0; i < idList.length; i++) {
+      uint diff = block.timestamp - properties[idList[i]].latestTenantPayment.timestamp;
+      uint limitSec = properties[idList[i]].paymentPeriodSec;
+      emit LogUints(i, idList.length);
+
+      if (properties[idList[i]].latestTenantPayment.from != address(0)) {
+
+        if (diff > limitSec) {
+          removeTenant(idList[i]);
+          continue;
+        }
+      
+        // 90%
+        if (diff > limitSec * 90/100) {
+          properties[idList[i]].latestTenantPayment.paymentStatus = PaymentState.HighAlert;
+          continue;
+        }
+        // 70%
+        if (diff > limitSec * 70/100) {
+          properties[idList[i]].latestTenantPayment.paymentStatus = PaymentState.Alert;
+          continue;
+        }
+        // 40%
+        if (diff > limitSec * 40/100) {
+          properties[idList[i]].latestTenantPayment.paymentStatus = PaymentState.Warning;
+          continue;
+        }
+      }
+    }
   }
 
   /// @notice Remove tenant from a listing
+  /// @param _id Listing id
+  function removeTenant(uint _id) private {
+    properties[_id].latestTenantPayment.timestamp = block.timestamp;
+    properties[_id].latestTenantPayment.from = address(0);
+    properties[_id].latestTenantPayment.amount = 0;
+    properties[_id].latestTenantPayment.paymentStatus = PaymentState.Ok;
+    properties[_id].status = State.Vacant;
+    properties[_id].tenant = payable(address(0));
+  }
+
+  /// @notice Remove a listing
+  /// @param _id Listing id
   /// @dev Only the contract owner can call this
-  function removeTenant() private onlyOwner {
-    // TODO: remove tenant from a listing and set status to NotAvailable
+  function removeProperty(uint _id) private onlyOwner {
+    // TODO: remove a listing entirely
+    // delete properties[_id];
+    // TODO: remove _id from idList
   }
 
   /// @notice Withdraw contract funds

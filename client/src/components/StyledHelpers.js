@@ -8,6 +8,6 @@ export const StyledHeaderBox = styled.div`
   margin-top: 1%;
   border: 1px solid ${colors.green};
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 2.5px;
   height: 50px;
 `;

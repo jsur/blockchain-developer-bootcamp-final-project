@@ -16,7 +16,6 @@ client/.idea
 client/cache
 client/cypress/screenshots/
 client/.vercel
-client/contract-build
 
 node_modules
 build
