@@ -21843,6 +21843,12 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0xaAA98A2D309Acd3227062e72B2BF18b7A9C5c615",
+      "transactionHash": "0x9932cc986e8590767ff56345e8a19d7a91f32889056ecff055499ec7d60b0cf6"
+    },
     "1337": {
       "events": {
         "0xd6c64986ac82ae5db393ba396404534c8743eb73dd99a83e574c46137d38c4b0": {
@@ -21947,7 +21953,7 @@
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-22T21:11:35.758Z",
+  "updatedAt": "2021-12-22T21:57:52.333Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Julius Suominen",
