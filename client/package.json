@@ -4,7 +4,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "yarn run build:copy && razzle start",
-    "build": "razzle build --noninteractive ",
+    "build": "razzle build --noninteractive && cp vercel.json build",
     "build:copy": "cp -a ../build/. contract-build"
   },
   "dependencies": {
