@@ -120,7 +120,7 @@ const Rented = () => {
         A Gelato scheduled task will check payment statuses periodically.
       </Text>
       <Text color="green" center t5>
-        If payments are late, the tenant will be removed and the listing is available again.
+        If payments are late, the tenant will be removed and the listing becomes available again.
       </Text>
       <br />
       {rentalsAddress && <RentedListings rentalsAddress={rentalsAddress} />}
